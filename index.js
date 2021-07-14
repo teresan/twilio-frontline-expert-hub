@@ -112,7 +112,6 @@ app.post('/conversations', (request, response) => {
 
 app.post('/templates', (request, response) => {
     console.log(request);
-    console.log(request);
     let location = request.query.location;
     let token = request.body.token; //empty?
     let worker = request.body.worker; //empty?
@@ -120,6 +119,19 @@ app.post('/templates', (request, response) => {
     
       console.log(location);
 });
+
+
+app.post('/pre-event', (request, response) => {
+  console.log(request);
+  
+});
+
+app.post('/post-event', (request, response) => {
+  console.log(request);
+  
+  
+});
+
 
 app.listen(config.port, () => {
   console.log(`Application started at localhost:${config.port}`);
