@@ -19,19 +19,69 @@ const customers = [
     },
   ];
 
-exports.handler = function (context, event, callback) {
-  switch(event.location) {
-    case 'GetCustomerDetailsByCustomerId': 
-      callback(null, 
-        {objects: {
-          customer: customers[event.CustomerId - 1]
-        }});
-    default: 
-      callback(null, {objects: {customers: customers}});
-  }
+const axios = require("axios");
+
+async function retrieveCustomers(DB){
+  console.log(DB);
+  try{
+    const resp = await axios.post(DB+'/auth/local', {
+    identifier: 'frontline_app',
+    password: '12345678',
+  });
+  console.log("data");
+   console.log(resp.data.jwt);
+  
+    const response =  await  axios.get(DB+'/customers', {
+           headers: {
+             Authorization:
+               'Bearer '+resp.data.jwt,
+           },
+       });
+   return response.data;
+      }
+      catch(err){
+        console.log('retrieveCustomers failed', err);
+      }
+
+  
 }
 
-exports.fetch = (phoneNumber) => {
+
+
+exports.handler = async function (context, event, callback) {
+
+   let customers = await retrieveCustomers(context.DB_URL);
+  
+    switch(event.location) {
+          case 'GetCustomerDetailsByCustomerId': 
+            console.log("GetCustomerDetailsByCustomerId");
+            
+            
+            console.log(customers[event.CustomerId - 1]);
+            
+            callback(null, 
+              {objects: {
+                customer: customers[event.CustomerId - 1]
+              }});
+            
+        
+          
+          break;
+          default: 
+          console.log("default");
+
+            console.log(customers);
+            callback(null, {objects: {customers: customers}});
+          
+          break;
+      }
+   
+}
+
+
+exports.fetch = async (phoneNumber, DB) => {
     console.log(phoneNumber);
+    const customers = await retrieveCustomers(DB); //problem to pass the URL --> context is not passed???
+    console.log(customers);
     return customers.filter(e => e.channels[0].value == phoneNumber)[0];
 }

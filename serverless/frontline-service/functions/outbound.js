@@ -1,5 +1,71 @@
+const getCustomerProxyAddress = (channelName) => {
+        if (channelName === 'whatsapp') {
+            return 'whatsapp:+555555';
+        } else {
+            return '+447828573605';
+        }
+
+        //hardcoded
+          //hardcoded --> it should go into the database configuration
+    };
+
+    const handleGetProxyAddress = (event) => {
+        console.log('Getting Proxy Address');
+        console.log(event.Token);
+        console.log(event.Worker);
+        console.log(event.CustomerId);
+        console.log(event.Channel.type);
+        console.log(event.Channel.value);
+
+    
+         const workerIdentity = event.Worker.identity;
+         const customerId = event.CustomerId;
+         const channelName = event.Channel.type;
+         const channelAddress = event.Channel.value;
+    
+         const proxyAddress = getCustomerProxyAddress(channelName);
+    
+         // In order to start a new conversation ConversationsApp need a proxy address
+         // otherwise the app doesn't know from which number send a message to a customer
+         if (proxyAddress) {
+                return proxyAddress
+             
+            
+         }else{
+             return null;
+         }
+    
+         console.log("Proxy address not found");
+         callback("No proxy address available")
+ };
+    
+
 exports.handler = function(context, event, callback) {
-    callback(null, {proxy_address: '+447828573605'});    
+    console.log('outbound');
+
+    const location = event.location;
+    console.log(location);
+
+     // Location helps to determine which action to perform.
+    switch (location) {
+             case 'GetProxyAddress': {
+                 let proxyAddress = handleGetProxyAddress(event); //callsback if needed
+                 if(proxyAddress)
+                    callback(null, {proxy_address: proxyAddress})
+                 else
+                    callback("No proxy address available");
+
+                 return;
+             }
+    
+             default: {
+                 console.log('Unknown location: ', location);
+                 callback(null);    
+                 return;
+             }
+    }
+
+
 }
 
 // const config = require('../../config');
@@ -23,35 +89,6 @@ exports.handler = function(context, event, callback) {
 //     }
 // };
 
-// const handleGetProxyAddress = (req, res) => {
-//     console.log('Getting Proxy Address');
-
-//     const body = req.body;
-//     const workerIdentity = req.tokenInfo.identity;
-//     const customerId = body.CustomerId;
-//     const channelName = body.Channel.type;
-//     const channelAddress = body.Channel.value;
-
-//     const proxyAddress = getCustomerProxyAddress(channelName);
-
-//     // In order to start a new conversation ConversationsApp need a proxy address
-//     // otherwise the app doesn't know from which number send a message to a customer
-//     if (proxyAddress) {
-//         res.status(200).send({ proxy_address: proxyAddress });
-//         console.log("Got proxy address!");
-//         return;
-//     }
-
-//     console.log("Proxy address not found");
-//     res.sendStatus(403);
-// };
-
-// const getCustomerProxyAddress = (channelName) => {
-//     if (channelName === 'whatsapp') {
-//         return config.twilio.whatsapp_number;
-//     } else {
-//         return config.twilio.sms_number;
-//     }
-// };
+// 
 
 // module.exports = outgoingConversationCallbackHandler;

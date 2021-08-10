@@ -1,9 +1,11 @@
 exports.handler = async function (context, event, callback) {
+    console.log("postEvent "+ JSON.stringify(event));
     const customerNumber = event['MessagingBinding.Address'];
 
     //find customer in crm 
     const crm = require(Runtime.getFunctions()['crm'].path);
-    const crmCustomer = crm.fetch(customerNumber);
+    const crmCustomer = crm.fetch(customerNumber,context.DB_URL);
+    const twilio = context.getTwilioClient();
 
     //fetch participant
     const participant = await twilio.conversations
@@ -30,4 +32,5 @@ exports.handler = async function (context, event, callback) {
             .update(customerProperties)
             .catch(e => console.log("Update customer participant failed: ", e));
     }
+    callback(null);
 }
