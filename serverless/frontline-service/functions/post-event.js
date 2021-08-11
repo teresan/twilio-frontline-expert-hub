@@ -1,18 +1,35 @@
 exports.handler = async function (context, event, callback) {
-    console.log("postEvent "+ JSON.stringify(event));
+
+    const twilio = context.getTwilioClient();
+    const response = new Twilio.Response();
+    response.setStatusCode(200);
+
     const customerNumber = event['MessagingBinding.Address'];
+    console.log(`post-event ${event.EventType} ${event.Identity?event.Identity:customerNumber}`);
+    let emptyAttributes = !event.Attributes || ('{}' == event.Attributes);
+
+    if (event.Identity) {
+        response.setBody('No need to query customer attributes: frontline user added');
+        callback(null, response);
+    }
+
+    if (!emptyAttributes) { //in outbound conversations, customer attributes are already loaded
+        response.setBody('No need to query customer attributes: outbound conversation');
+        callback(null, response);
+    }
 
     //find customer in crm 
     const crm = require(Runtime.getFunctions()['crm'].path);
-    const crmCustomer = crm.fetch(customerNumber,context.DB_URL);
-    const twilio = context.getTwilioClient();
+    const crmCustomer = await crm.fetch(customerNumber, context.DB_URL)
+        .catch(error => callback(error));;
 
     //fetch participant
     const participant = await twilio.conversations
         .conversations(event.ConversationSid)
         .participants
         .get(event.ParticipantSid)
-        .fetch();
+        .fetch()
+        .catch(error => callback(error));
 
     //save crm data to participant attributes
     const participantAttributes = JSON.parse(participant.attributes);
@@ -27,10 +44,10 @@ exports.handler = async function (context, event, callback) {
 
     //update participant
     if (participant.attributes !== customerProperties.attributes) {
-        // Update attributes of customer to include customer_id
         await participant
             .update(customerProperties)
-            .catch(e => console.log("Update customer participant failed: ", e));
+            .catch(error => callback(error));
     }
-    callback(null);
+    
+    callback(null, response);
 }
