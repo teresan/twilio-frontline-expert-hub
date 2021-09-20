@@ -50,6 +50,7 @@ async function retrieveCustomers(DB){
 
 exports.handler = async function (context, event, callback) {
 
+  console.log("CRM");
    let customers = await retrieveCustomers(context.DB_URL);
   
     switch(event.location) {

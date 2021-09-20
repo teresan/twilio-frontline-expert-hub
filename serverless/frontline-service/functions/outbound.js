@@ -1,15 +1,18 @@
-const getCustomerProxyAddress = (channelName) => {
+const getCustomerProxyAddress = (channelName, channelAddress, context) => {
         if (channelName === 'whatsapp') {
             return 'whatsapp:+555555';
-        } else {
-            return '+447828573605';
+        } else if (channelName === 'sms') { 
+            if(channelAddress.includes('+33'))
+                return context.FR_NUMBER;
+            else if(channelAddress.includes('+44'))
+                return context.UK_NUMBER;
         }
 
         //hardcoded
           //hardcoded --> it should go into the database configuration
     };
 
-    const handleGetProxyAddress = (event) => {
+    const handleGetProxyAddress = (event, context) => {
         console.log('Getting Proxy Address');
         console.log(event.Token);
         console.log(event.Worker);
@@ -23,7 +26,7 @@ const getCustomerProxyAddress = (channelName) => {
          const channelName = event.Channel.type;
          const channelAddress = event.Channel.value;
     
-         const proxyAddress = getCustomerProxyAddress(channelName);
+         const proxyAddress = getCustomerProxyAddress(channelName, channelAddress, context);
     
          // In order to start a new conversation ConversationsApp need a proxy address
          // otherwise the app doesn't know from which number send a message to a customer
@@ -41,7 +44,7 @@ const getCustomerProxyAddress = (channelName) => {
     
 
 exports.handler = function(context, event, callback) {
-    console.log('outbound');
+    console.log('OUTBOUND' + JSON.stringify(event));
 
     const location = event.location;
     console.log(location);
@@ -49,7 +52,7 @@ exports.handler = function(context, event, callback) {
      // Location helps to determine which action to perform.
     switch (location) {
              case 'GetProxyAddress': {
-                 let proxyAddress = handleGetProxyAddress(event); //callsback if needed
+                 let proxyAddress = handleGetProxyAddress(event, context); //callsback if needed
                  if(proxyAddress)
                     callback(null, {proxy_address: proxyAddress})
                  else

@@ -1,5 +1,7 @@
 exports.handler = async function (context, event, callback) {
 
+    console.log("POST EVENT "+ JSON.stringify(event));
+
     const twilio = context.getTwilioClient();
     const response = new Twilio.Response();
     response.setStatusCode(200);
@@ -21,7 +23,7 @@ exports.handler = async function (context, event, callback) {
     //find customer in crm 
     const crm = require(Runtime.getFunctions()['crm'].path);
     const crmCustomer = await crm.fetch(customerNumber, context.DB_URL)
-        .catch(error => callback(error));;
+        .catch(error => callback(error));
 
     //fetch participant
     const participant = await twilio.conversations
