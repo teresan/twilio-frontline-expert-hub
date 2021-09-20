@@ -3,9 +3,9 @@ const getCustomerProxyAddress = (channelName, channelAddress, context) => {
             return 'whatsapp:+555555';
         } else if (channelName === 'sms') { 
             if(channelAddress.includes('+33'))
-                return context.FR_NUMBER;
+                return context.FRONTLINE_PROXY_NUMBER_FR;
             else if(channelAddress.includes('+44'))
-                return context.UK_NUMBER;
+                return context.FRONTLINE_PROXY_NUMBER_UK;
         }
 
         //hardcoded
