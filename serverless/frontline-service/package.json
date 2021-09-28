@@ -9,10 +9,10 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "twilio": "^3.56"
+    "twilio": "latest"
   },
   "devDependencies": {
-    "twilio-run": "^2.6.0"
+    "twilio-run": "^2.9.0"
   },
   "engines": {
     "node": "10"
