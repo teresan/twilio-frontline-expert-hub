@@ -2,7 +2,7 @@
 exports.handler = async function (context, event, callback) {
    console.log("PreEvent " + JSON.stringify(event));
    
-   const client = context.getTwilioClient();
+   const twilio = context.getTwilioClient();
 
     const crm = require(Runtime.getFunctions()['crm'].path);
     console.log(event['MessagingBinding.Address']);
@@ -24,7 +24,7 @@ exports.handler = async function (context, event, callback) {
     }
     if(event['EventType']=='onMessageAdd' && event['Source']!='SDK'){
 
-        await client.conversations.conversations(event['ConversationSid'])
+        await twilio.conversations.conversations(event['ConversationSid'])
         .messages
         .create({ author: 'system', body: 'We add here info from the BOT - but at this stage is still seen by the agent - it is routed' }); //pass the person
        

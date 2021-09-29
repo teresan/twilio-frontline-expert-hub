@@ -4,9 +4,16 @@ exports.handler = async function (context, event, callback) {
     return callback(null); //we do not do anything - all sorted in prior call - just to keep consistency with programming
 
   }
+  
   console.log('routing');
   const twilio = context.getTwilioClient();
   let user = event['MessagingBinding.Address'];
+
+  await twilio.conversations.conversations(event['ConversationSid'])
+  .messages
+  .create({ author: 'system', body: 'Welcome message from routing - I have not connected to an agent' }); //pass the person
+ 
+  return callback(null);
 
   let selectedWorker = await getLastFrontLineUser(twilio, user, event.ConversationSid);
 
