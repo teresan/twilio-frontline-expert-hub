@@ -122,4 +122,5 @@ dist
 **/.DS_Store
 
 .twilio-functions
+.twiliodeployinfo
 .nvmrc
