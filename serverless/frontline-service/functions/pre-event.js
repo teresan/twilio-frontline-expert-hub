@@ -24,30 +24,33 @@ exports.handler = async function (context, event, callback) {
     }
     if(event['EventType']=='onMessageAdd' && event['Source']!='SDK'){
 
-        await twilio.conversations.conversations(event['ConversationSid'])
-        .messages
-        .create({ author: 'system', body: 'We add here info from the BOT - but at this stage is still seen by the agent - it is routed' }); //pass the person
-       
-        if(event['Body']=='route'){
+        console.log(event['Body'])
+        if(event['Body']=='Route'){
 
 
-            let selectedWorker = await getLastFrontLineUser(twilio, user, event.ConversationSid);
+            let selectedWorker = await getLastFrontLineUser(twilio, user, event['ConversationSid']);
 
             if (!selectedWorker) {
                 selectedWorker = getFirstAvailableWorker();
             }
 
             await twilio.conversations
-                .conversations(event.ConversationSid)
+                .conversations(event['ConversationSid'])
                 .participants
                 .create({ identity: selectedWorker })
                 .then(participant => console.log('Create agent participant: ', participant.sid))
                 .catch(e => console.log('Create agent participant: ', e));
 
-            return callback(null, event.ConversationSid);
+            return callback(null, event['ConversationSid']);
+        }
+        else{
+            await twilio.conversations.conversations(event['ConversationSid'])
+        .messages
+        .create({ author: 'system', body: 'We add here info from the BOT - but at this stage is still seen by the agent - it is routed' }); //pass the person
+        callback(null);
+
         }
         
-        callback(null);
 
 
     }
