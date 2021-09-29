@@ -60,6 +60,6 @@ let getLastFrontLineUser = async (twilio, user, thisConversation) => {
 
 let getFirstAvailableWorker = () => {
   // TODO implement this, taskrouter workers
-  return 'tnascimento+frontline@twilio.com';
+  return 'aandresdelvalle+frontline@twilio.com';
   // return Math.random() == 0 ? 'tnascimento+frontline@twilio.com' : 'aandresdelvalle+frontline@twilio.com';
 }

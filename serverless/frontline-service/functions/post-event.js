@@ -20,7 +20,7 @@ exports.handler = async function (context, event, callback) {
         callback(null, response);
     }
 
-    //find customer in crm 
+    //find customer in crm -- FOR ALL EVENTS???
     const crm = require(Runtime.getFunctions()['crm'].path);
     const crmCustomer = await crm.fetch(customerNumber, context.DB_URL)
         .catch(error => callback(error));
