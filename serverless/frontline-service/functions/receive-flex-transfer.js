@@ -22,7 +22,7 @@ exports.handler = async function (context, event, callback) {
     .participants
     .create({
       'messagingBinding.address': participant.channels[0].value,
-      'messagingBinding.proxyAddress': context.FRONTLINE_PROXY_NUMBER,
+      'messagingBinding.proxyAddress': context.FRONTLINE_PROXY_NUMBER_UK, //to be changed
       'attributes': {
           avatar: participant.avatar,
           customer_id: participant.customer_id,

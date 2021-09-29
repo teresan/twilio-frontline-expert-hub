@@ -22,14 +22,14 @@ const customers = [
 const axios = require("axios");
 
 async function retrieveCustomers(DB){
-  console.log(DB);
+  console.log("retrieveCustomers: "+DB);
   try{
     const resp = await axios.post(DB+'/auth/local', {
     identifier: 'frontline_app',
     password: '12345678',
   });
-  console.log("data");
-   console.log(resp.data.jwt);
+  console.log("retrieveCustomers: "+"data");
+  console.log("retrieveCustomers: "+ resp.data.jwt);
   
     const response =  await  axios.get(DB+'/customers', {
            headers: {
@@ -40,7 +40,7 @@ async function retrieveCustomers(DB){
    return response.data;
       }
       catch(err){
-        console.log('retrieveCustomers failed', err);
+        console.log('"retrieveCustomers: "+ retrieveCustomers failed', err);
       }
 
   
@@ -81,8 +81,8 @@ exports.handler = async function (context, event, callback) {
 
 
 exports.fetch = async (phoneNumber, DB) => {
-    console.log(phoneNumber);
+    console.log("fetch: "+phoneNumber);
     const customers = await retrieveCustomers(DB); //problem to pass the URL --> context is not passed???
-    console.log(customers);
+    console.log("fetch: "+JSON.stringify(customers));
     return customers.filter(e => e.channels[0].value == phoneNumber)[0];
 }

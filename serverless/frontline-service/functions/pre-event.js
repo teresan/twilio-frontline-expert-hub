@@ -1,6 +1,6 @@
 
 exports.handler = function (context, event, callback) {
-    console.log("PreEvent " + JSON.stringify(event));
+   console.log("PreEvent " + JSON.stringify(event));
 
     const crm = require(Runtime.getFunctions()['crm'].path);
     console.log(event['MessagingBinding.Address']);

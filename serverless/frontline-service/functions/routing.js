@@ -1,5 +1,12 @@
+
 exports.handler = async function (context, event, callback) {
+  if(event.ByPass){
+    return callback(null); //we do not do anything - all sorted in prior call - just to keep consistency with programming
+
+  }
+  
   const twilio = context.getTwilioClient();
+  
 
   console.log("ROUTING "+ JSON.stringify(event));
   //if the customer has not been matched to any worker
@@ -9,15 +16,10 @@ exports.handler = async function (context, event, callback) {
       .list({limit: 20});
   
   console.log(JSON.stringify(result));
-/*
-  const participants = result.participants
-  participants.forEach(p => console.log(p.sid))
-*/
-  //bot exchanges
+
+ 
     
-  await twilio.conversations.conversations(event.ConversationSid)
-  .messages
-  .create({ author: 'system', body: 'If you know the email you want to connect, send it our way.' });
+ 
 
     
   let selectedWorker = Math.random() == 0 ? 'tnascimento+frontline@twilio.com' : 'aandresdelvalle+frontline@twilio.com';
