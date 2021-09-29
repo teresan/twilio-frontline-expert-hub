@@ -28,7 +28,7 @@ exports.handler = async function (context, event, callback) {
         if(event['Body']=='Route'){
 
 
-            let selectedWorker = await getLastFrontLineUser(twilio, user, event['ConversationSid']);
+            let selectedWorker = await getLastFrontLineUser(twilio, event['Author'], event['ConversationSid']);
 
             if (!selectedWorker) {
                 selectedWorker = getFirstAvailableWorker();
