@@ -33,7 +33,16 @@ exports.handler = async function (context, event, callback) {
             if (!selectedWorker) {
                 selectedWorker = getFirstAvailableWorker();
             }
-
+            const crm = require(Runtime.getFunctions()['crm'].path);
+           
+            const participant = await crm.fetch(event['Author'], context.DB_URL);  // --> OPTION WHEN WHE DO NOT HAVE IT IN THE DB!!
+              //TODO error handling participant not found
+            console.log("rdf3: "+JSON.stringify(participant));
+            //update conversation name
+            await twilio.conversations
+                .conversations(event['ConversationSid']).
+                update({ friendlyName: `${participant.display_name} + Bot`
+            });
             await twilio.conversations
                 .conversations(event['ConversationSid'])
                 .participants
