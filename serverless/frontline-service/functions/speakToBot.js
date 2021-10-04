@@ -14,7 +14,7 @@ exports.speakToBot = async (message, participant) => {
             
             return {message: `Hello ${participant}`, route: 'no' }
 
-          case 'Speak agent': 
+          case 'Speak to an agent': 
             
             return {message: `Let us pass you to an agent`, route: 'yes' } 
         
