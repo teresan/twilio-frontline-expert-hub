@@ -32,8 +32,8 @@ exports.handler = async function (context, event, callback) {
         let participants = await twilio.conversations.conversations(event['ConversationSid'])
                                         .participants
                                         .list({limit:20});
-                                        
-        console.log(participants.length);
+
+        console.log(participants);
         
         const speakToBot = require(Runtime.getFunctions()['speakToBot'].path);
 
