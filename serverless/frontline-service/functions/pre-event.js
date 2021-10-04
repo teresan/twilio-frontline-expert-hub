@@ -30,7 +30,7 @@ exports.handler = async function (context, event, callback) {
     if(event['EventType']=='onMessageAdd' && event['Source']!='SDK'){  //only acting on customer's messages
         const speakToBot = require(Runtime.getFunctions()['speakToBot'].path);
 
-        let reply = speakToBot.speakToBot(message, event['Author']);
+        let reply = await speakToBot.speakToBot(message, event['Author']);
 
         console.log(reply);
                           
@@ -73,6 +73,7 @@ exports.handler = async function (context, event, callback) {
         }
         
 
+        callback(null);
 
 
 
