@@ -19,8 +19,9 @@ exports.handler = async function (context, event, callback) {
         callback(null, response);
     }
 
+    console.log(event);
     //find customer in crm -- to add attributes to FrontLine application
-    
+
     const crm = require(Runtime.getFunctions()['crm'].path);
     const crmCustomer = await crm.fetch(customerNumber, context.DB_URL)
         .catch(error => callback(error));
