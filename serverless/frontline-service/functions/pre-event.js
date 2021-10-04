@@ -28,6 +28,13 @@ exports.handler = async function (context, event, callback) {
     let message = event['Body'];
 
     if(event['EventType']=='onMessageAdd' && event['Source']!='SDK'){  //only acting on customer's messages
+        
+        let participants = await twilio.conversations.conversations(event['ConversationSid'])
+                                        .participants
+                                        .list({limit:20});
+                                        
+        console.log(participants.length);
+        
         const speakToBot = require(Runtime.getFunctions()['speakToBot'].path);
 
         let reply = await speakToBot.speakToBot(message, event['Author']);
