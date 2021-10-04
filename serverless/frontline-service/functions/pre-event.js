@@ -35,50 +35,51 @@ exports.handler = async function (context, event, callback) {
 
         console.log(participants.length);
         
-        const speakToBot = require(Runtime.getFunctions()['speakToBot'].path);
+        if(participants.length<=1){ //if we are already with an agent ignore the bot
+            const speakToBot = require(Runtime.getFunctions()['speakToBot'].path);
 
-        let reply = await speakToBot.speakToBot(message, event['Author']);
+            let reply = await speakToBot.speakToBot(message, event['Author']);
 
-        console.log(reply);
-                          
-        await twilio.conversations.conversations(event['ConversationSid'])
-                     .messages
-                    .create({ author: 'system', body:  reply.message}); //pass the person
+            console.log(reply);
+                            
+            await twilio.conversations.conversations(event['ConversationSid'])
+                        .messages
+                        .create({ author: 'system', body:  reply.message}); //pass the person
 
-        if(reply.route == 'yes'){ //
+            if(reply.route == 'yes'){ //
 
 
-            let selectedWorker = await getLastFrontLineUser(twilio, event['Author'], event['ConversationSid']);
+                let selectedWorker = await getLastFrontLineUser(twilio, event['Author'], event['ConversationSid']);
 
-            if (!selectedWorker) {
-                selectedWorker = getFirstAvailableWorker();
+                if (!selectedWorker) {
+                    selectedWorker = getFirstAvailableWorker();
+                }
+                const crm = require(Runtime.getFunctions()['crm'].path);
+            
+                const participant = await crm.fetch(event['Author'], context.DB_URL);  // --> OPTION WHEN WHE DO NOT HAVE IT IN THE DB!!
+                //TODO error handling participant not found
+                //--> BOT can ask THE participants name before
+                let name = "UNKNOWN"
+
+                if(participant.display_name) {
+                    name = participant.display_name
+                }
+                //update conversation name
+                await twilio.conversations
+                    .conversations(event['ConversationSid']).
+                    update({ friendlyName: `${name}`
+                });
+            
+                await twilio.conversations
+                    .conversations(event['ConversationSid'])
+                    .participants
+                    .create({ identity: selectedWorker })
+                    .then(participant => console.log('Create agent participant: ', participant.sid))
+                    .catch(e => console.log('Create agent participant: ', e));
+
+                return callback(null, event['ConversationSid']);
             }
-            const crm = require(Runtime.getFunctions()['crm'].path);
-           
-            const participant = await crm.fetch(event['Author'], context.DB_URL);  // --> OPTION WHEN WHE DO NOT HAVE IT IN THE DB!!
-            //TODO error handling participant not found
-            //--> BOT can ask THE participants name before
-            let name = "UNKNOWN"
-
-            if(participant.display_name) {
-                name = participant.display_name
-            }
-            //update conversation name
-            await twilio.conversations
-                .conversations(event['ConversationSid']).
-                update({ friendlyName: `${name}`
-            });
-        
-            await twilio.conversations
-                .conversations(event['ConversationSid'])
-                .participants
-                .create({ identity: selectedWorker })
-                .then(participant => console.log('Create agent participant: ', participant.sid))
-                .catch(e => console.log('Create agent participant: ', e));
-
-            return callback(null, event['ConversationSid']);
         }
-        
 
         callback(null);
 
