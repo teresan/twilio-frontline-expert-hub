@@ -32,6 +32,7 @@ exports.handler = async function (context, event, callback) {
 
         let reply = speakToBot.speakToBot(message, event['Author']);
 
+        console.log(reply);
                           
         await twilio.conversations.conversations(event['ConversationSid'])
                      .messages
