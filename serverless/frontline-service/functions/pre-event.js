@@ -33,7 +33,7 @@ exports.handler = async function (context, event, callback) {
                                         .participants
                                         .list({limit:20});
 
-        console.log(participants);
+        console.log(participants.length);
         
         const speakToBot = require(Runtime.getFunctions()['speakToBot'].path);
 
