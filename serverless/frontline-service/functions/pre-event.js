@@ -22,10 +22,22 @@ exports.handler = async function (context, event, callback) {
         });
 
     }
-    if(event['EventType']=='onMessageAdd' && event['Source']!='SDK'){
+    //Catch MessageAdd event to channel to BOT
+    console.log(event['Body'])
 
-        console.log(event['Body'])
-        if(event['Body']=='Route'){
+    let message = event['Body'];
+
+    if(event['EventType']=='onMessageAdd' && event['Source']!='SDK'){  //only acting on customer's messages
+        const speakToBot = require(Runtime.getFunctions()['speakToBot'].path);
+
+        let reply = speakToBot(message, event['Author']);
+
+                          
+        await twilio.conversations.conversations(event['ConversationSid'])
+                     .messages
+                    .create({ author: 'system', body:  reply.message}); //pass the person
+
+        if(reply.route == 'yes'){ //
 
 
             let selectedWorker = await getLastFrontLineUser(twilio, event['Author'], event['ConversationSid']);
@@ -58,15 +70,9 @@ exports.handler = async function (context, event, callback) {
 
             return callback(null, event['ConversationSid']);
         }
-        else{
-
-            await twilio.conversations.conversations(event['ConversationSid'])
-                         .messages
-                        .create({ author: 'system', body: 'We add here info from the BOT - but at this stage is still seen by the agent - it is routed' }); //pass the person
-                        callback(null);
-
-        }
         
+
+
 
 
     }
