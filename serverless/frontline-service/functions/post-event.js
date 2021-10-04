@@ -1,13 +1,12 @@
 exports.handler = async function (context, event, callback) {
 
-    console.log("POST EVENT "+ JSON.stringify(event));
 
     const twilio = context.getTwilioClient();
     const response = new Twilio.Response();
     response.setStatusCode(200);
 
     const customerNumber = event['MessagingBinding.Address'];
-    console.log(`post-event ${event.EventType} ${event.Identity?event.Identity:customerNumber}`);
+
     let emptyAttributes = !event.Attributes || ('{}' == event.Attributes);
 
     if (event.Identity) {
@@ -20,7 +19,8 @@ exports.handler = async function (context, event, callback) {
         callback(null, response);
     }
 
-    //find customer in crm -- FOR ALL EVENTS???
+    //find customer in crm -- to add attributes to FrontLine application
+    
     const crm = require(Runtime.getFunctions()['crm'].path);
     const crmCustomer = await crm.fetch(customerNumber, context.DB_URL)
         .catch(error => callback(error));

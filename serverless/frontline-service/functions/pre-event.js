@@ -36,13 +36,19 @@ exports.handler = async function (context, event, callback) {
             const crm = require(Runtime.getFunctions()['crm'].path);
            
             const participant = await crm.fetch(event['Author'], context.DB_URL);  // --> OPTION WHEN WHE DO NOT HAVE IT IN THE DB!!
-              //TODO error handling participant not found
-            console.log("rdf3: "+JSON.stringify(participant));
+            //TODO error handling participant not found
+            //--> BOT can ask THE participants name before
+            let name = "UNKNOWN"
+
+            if(participant.display_name) {
+                name = participant.display_name
+            }
             //update conversation name
             await twilio.conversations
                 .conversations(event['ConversationSid']).
-                update({ friendlyName: `${participant.display_name} + Bot`
+                update({ friendlyName: `${name}`
             });
+        
             await twilio.conversations
                 .conversations(event['ConversationSid'])
                 .participants
@@ -53,10 +59,11 @@ exports.handler = async function (context, event, callback) {
             return callback(null, event['ConversationSid']);
         }
         else{
+
             await twilio.conversations.conversations(event['ConversationSid'])
-        .messages
-        .create({ author: 'system', body: 'We add here info from the BOT - but at this stage is still seen by the agent - it is routed' }); //pass the person
-        callback(null);
+                         .messages
+                        .create({ author: 'system', body: 'We add here info from the BOT - but at this stage is still seen by the agent - it is routed' }); //pass the person
+                        callback(null);
 
         }
         

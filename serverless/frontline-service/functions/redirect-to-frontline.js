@@ -1,5 +1,6 @@
 const axios = require('axios')
 
+// not used-  no need to recreate teh smart proxing from Messaging Services with a BOT
 const getCustomerProxyAddress = (channelName, channelAddress, context) => {
   if (channelName === 'whatsapp') {
       return 'whatsapp:+555555';
