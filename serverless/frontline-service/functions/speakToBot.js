@@ -7,7 +7,8 @@ exports.handler = async function (context, event, callback) {
 exports.speakToBot = async (message, participant) => {
 
   console.log("SpeakToBot");
-  
+  console.log(message);
+
     switch(message) {
           case 'Hello': 
             
