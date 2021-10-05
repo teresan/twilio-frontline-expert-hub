@@ -35,7 +35,8 @@ exports.handler = async function (context, event, callback) {
 
         console.log(participants.length);
         
-        if(participants.length<=1){ //if we are already with an agent ignore the bot
+        if(participants.length<=1){  //The BOT in this example is not a participant, the role is played by the system
+
             const speakToBot = require(Runtime.getFunctions()['speakToBot'].path);
 
             let reply = await speakToBot.speakToBot(message, event['Author']);
@@ -46,13 +47,20 @@ exports.handler = async function (context, event, callback) {
                         .messages
                         .create({ author: 'system', body:  reply.message}); //pass the person
 
-            if(reply.route == 'yes'){ //
+            if(reply.route != 'no'){ //we need to add the agent
+                let selectedWorker = "";
+                if (reply.route!= 'agent') {
+                    selectedWorker = await getLastFrontLineUser(twilio, event['Author'], event['ConversationSid']);
+        
+                
+                    if (!selectedWorker) {
+                        selectedWorker = getFirstAvailableWorker();
+                    }
 
+                }
+                else{
 
-                let selectedWorker = await getLastFrontLineUser(twilio, event['Author'], event['ConversationSid']);
-
-                if (!selectedWorker) {
-                    selectedWorker = getFirstAvailableWorker();
+                    selectedWorker = reply.route;
                 }
                 const crm = require(Runtime.getFunctions()['crm'].path);
             

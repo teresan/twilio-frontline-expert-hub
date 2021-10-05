@@ -8,20 +8,42 @@ exports.speakToBot = async (message, participant) => {
 
   console.log("SpeakToBot");
   console.log(message);
+  let option = "";
+  
+  if(message.includes("EMAIL"))
+  {
+      option = "email"
+  }
+  else if(message.includes("AGENT"))
+  {
+      option = "agent"
+  }
 
-    switch(message) {
-          case 'Hello': 
-            
-            return {message: `Hello ${participant}`, route: 'no' }
+    switch(option) {
+          case 'email': 
 
-          case 'Speak to an agent': 
+          //TODO error handling participant not found
+          //--> BOT can ask THE participants name before
+          let email = getEmailFromMessage(message);
+
+          return {message: `Bear with us while we connect you to ${email}`, route: email } 
+       
+
+          case 'agent': 
             
-            return {message: `Let us pass you to an agent`, route: 'yes' } 
+            return {message: `Bear with us while we connect you to someone`, route: 'agent' } 
         
           default: 
-          console.log("default");
+          const crm = require(Runtime.getFunctions()['crm'].path);
+            
+          const participant2 = await crm.fetch(participant, context.DB_URL);  // --> OPTION WHEN WHE DO NOT HAVE IT IN THE DB!!
+          
+          let name = "UNKNOWN"
 
-          return {message: `I have no clue what you said. Write "Speak to an agent" to speak to a person`, route: 'no' } 
+          if(participant2.display_name) {
+              name = participant2.display_name
+          }
+          return {message: ` ${name}, if you know the email of the person you want to speak to write: EMAIL person@email.com ; otherwise write AGENT and we will connect you with an expert.`, route: 'no' } 
         
       }
    
