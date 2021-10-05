@@ -49,3 +49,10 @@ exports.speakToBot = async (message, participant) => {
    
 }
 
+async function getEmailFromMessage(message){
+
+  let parts = message.split(" ");
+  const found = parts.find(element => element.includes('@'));
+  return found;
+
+}
