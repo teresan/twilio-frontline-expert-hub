@@ -20,7 +20,7 @@ exports.handler = async function (context, event, callback) {
             callback("this is an error " + e);
 
         });
-
+ 
     }
     //Catch MessageAdd event to channel to BOT
     console.log(event['Body'])
