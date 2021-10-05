@@ -10,7 +10,7 @@ exports.handler = async function (context, event, callback) {
 
   await twilio.conversations.conversations(event['ConversationSid'])
   .messages
-  .create({ author: 'system', body: 'Welcome message from routing - I have not connected to any agent' }); //pass the person
+  .create({ author: 'system', body: 'Welcome to the Expert Hub. How are you today?' }); //pass the person
  
   return callback(null);
 
