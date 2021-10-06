@@ -31,16 +31,16 @@
         
           default: 
           
-          const crm = require(Runtime.getFunctions()['crm'].path);
+            const crm = require(Runtime.getFunctions()['crm'].path);
+              
+            const participant2 = await crm.fetch(participant, db);  // --> OPTION WHEN WHE DO NOT HAVE IT IN THE DB!!
             
-          const participant2 = await crm.fetch(participant, db);  // --> OPTION WHEN WHE DO NOT HAVE IT IN THE DB!!
-          
-          let name = "UNKNOWN"
+            let name = "UNKNOWN"
 
-          if(participant2.display_name) {
-              name = participant2.display_name
-          }
-          return {message: ` ${name}, if you know the email of the person you want to speak to write: EMAIL person@email.com ; otherwise write AGENT and we will connect you with an expert.`, route: 'no' } ;
+            if(participant2.display_name) {
+                name = participant2.display_name
+            }
+            return {message: ` ${name}, if you know the email of the person you want to speak to write: EMAIL person@email.com ; otherwise write AGENT and we will connect you with an expert.`, route: 'no' } ;
         
       }
    

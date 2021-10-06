@@ -48,7 +48,7 @@ exports.handler = async function (context, event, callback) {
 
             if(reply.route != 'no'){ //we need to add the agent
                 let selectedWorker = "";
-                if (reply.route!= 'agent') {
+                if (reply.route == 'agent') {
                     selectedWorker = await getLastFrontLineUser(twilio, event['Author'], event['ConversationSid']);
         
                 
