@@ -34,7 +34,6 @@ exports.handler = async function (context, event, callback) {
                                         .list({limit:20});
 
         console.log(participants.length);
-        
         if(participants.length<=1){  //The BOT in this example is not a participant, the role is played by the system
 
             const speakToBot = require(Runtime.getFunctions()['speakToBot'].path);
@@ -62,6 +61,7 @@ exports.handler = async function (context, event, callback) {
 
                     selectedWorker = reply.route;
                 }
+                console.log(selectedWorker);
                 const crm = require(Runtime.getFunctions()['crm'].path);
             
                 const participant = await crm.fetch(event['Author'], context.DB_URL);  // --> OPTION WHEN WHE DO NOT HAVE IT IN THE DB!!
