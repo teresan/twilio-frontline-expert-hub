@@ -20,7 +20,7 @@
 
           //TODO error handling participant not found
           //--> BOT can ask THE participants name before
-          let email = getEmailFromMessage(message);
+          let email = await getEmailFromMessage(message);
 
           return {message: `Bear with us while we connect you to ${email}`, route: email } ;
        
@@ -40,7 +40,7 @@
             if(participant2.display_name) {
                 name = participant2.display_name
             }
-            return {message: ` ${name}, if you know the email of the person you want to speak, please write: \n EMAIL person@email.com ; \n otherwise write\n AGENT and we will connect you with an expert.`, route: 'no' } ;
+            return {message: ` ${name}, if you know the email of the person you want to speak, please write: \n EMAIL person@email.com ; \n otherwise write:\n AGENT \nand we will connect you with an expert.`, route: 'no' } ;
         
       }
    
