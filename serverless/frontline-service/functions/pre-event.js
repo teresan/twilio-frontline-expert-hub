@@ -39,7 +39,7 @@ exports.handler = async function (context, event, callback) {
 
             const speakToBot = require(Runtime.getFunctions()['speakToBot'].path);
 
-            let reply = await speakToBot({message: message, participant: event['Author']});
+            let reply = await speakToBot(message, event['Author'], context.DB_URL);
 
             console.log(reply);
                             

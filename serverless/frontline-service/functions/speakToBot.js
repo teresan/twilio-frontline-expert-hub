@@ -1,17 +1,16 @@
-//exports.speakToBot = async (message, participant) => {
 
-exports.handler = async function (context, event, callback) {
-
+//exports.handler = async function (context, event, callback) {
+  exports.speakToBot = async (message, participant, db) => {
 
   console.log("SpeakToBot");
-  console.log(event.message);
+  console.log(message);
   let option = "";
   
-  if(event.message.includes("EMAIL"))
+  if(message.includes("EMAIL"))
   {
       option = "email"
   }
-  else if(event.message.includes("AGENT"))
+  else if(message.includes("AGENT"))
   {
       option = "agent"
   }
@@ -21,20 +20,20 @@ exports.handler = async function (context, event, callback) {
 
           //TODO error handling participant not found
           //--> BOT can ask THE participants name before
-          let email = getEmailFromMessage(event.message);
+          let email = getEmailFromMessage(message);
 
-          return callback({message: `Bear with us while we connect you to ${email}`, route: email } );
+          return {message: `Bear with us while we connect you to ${email}`, route: email } ;
        
 
           case 'agent': 
             
-            return callback({message: `Bear with us while we connect you to someone`, route: 'agent' }); 
+            return {message: `Bear with us while we connect you to someone`, route: 'agent' }; 
         
           default: 
           
           const crm = require(Runtime.getFunctions()['crm'].path);
             
-          const participant2 = await crm.fetch(event.participant, context.DB_URL);  // --> OPTION WHEN WHE DO NOT HAVE IT IN THE DB!!
+          const participant2 = await crm.fetch(participant, db);  // --> OPTION WHEN WHE DO NOT HAVE IT IN THE DB!!
           
           let name = "UNKNOWN"
 
