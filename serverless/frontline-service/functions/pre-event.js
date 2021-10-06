@@ -85,7 +85,7 @@ exports.handler = async function (context, event, callback) {
                     .then(participant => console.log('Create agent participant: ', participant.sid))
                     .catch(e => console.log('Create agent participant: ', e));
 
-                return callback(null, event['ConversationSid']);
+                callback(null, event['ConversationSid']);
             }
         }
 
