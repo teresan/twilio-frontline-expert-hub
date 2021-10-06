@@ -40,7 +40,7 @@
             if(participant2.display_name) {
                 name = participant2.display_name
             }
-            return {message: ` ${name}, if you know the email of the person you want to speak to write: EMAIL person@email.com ; otherwise write AGENT and we will connect you with an expert.`, route: 'no' } ;
+            return {message: ` ${name}, if you know the email of the person you want to speak, please write: \n EMAIL person@email.com ; \n otherwise write\n AGENT and we will connect you with an expert.`, route: 'no' } ;
         
       }
    
