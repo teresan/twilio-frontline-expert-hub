@@ -35,19 +35,16 @@ const getCustomerProxyAddress = (channelName, channelAddress, context) => {
              
             
          }else{
+            console.log("Proxy address not found");
+
              return null;
          }
     
-         console.log("Proxy address not found");
-         callback("No proxy address available")
  };
     
 
 exports.handler = function(context, event, callback) {
-    console.log('OUTBOUND' + JSON.stringify(event));
-
     const location = event.location;
-    console.log(location);
 
      // Location helps to determine which action to perform.
     switch (location) {
@@ -70,28 +67,3 @@ exports.handler = function(context, event, callback) {
 
 
 }
-
-// const config = require('../../config');
-
-// const outgoingConversationCallbackHandler = (req, res) => {
-//     console.log('outgoingConversationCallbackHandler');
-
-//     const location = req.query.location;
-
-//     // Location helps to determine which action to perform.
-//     switch (location) {
-//         case 'GetProxyAddress': {
-//             handleGetProxyAddress(req, res);
-//             return;
-//         }
-
-//         default: {
-//             console.log('Unknown location: ', location);
-//             res.sendStatus(422);
-//         }
-//     }
-// };
-
-// 
-
-// module.exports = outgoingConversationCallbackHandler;
