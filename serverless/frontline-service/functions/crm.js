@@ -1,16 +1,19 @@
-const axios = require("axios");
-
 async function retrieveCustomers(context) {
+
+  const axios = require("axios").create({
+    baseURL: context.DB_URL
+  });
   try {
-    const resp = await axios.post(context.DB + '/auth/local', {
-      identifier: 'frontline_app',
-      password: context.DB_PASS,
+    const token = await axios.post('/auth/local', {
+      identifier: context.DB_ID,
+      password: context.DB_PASS, 
     });
-    const response = await axios.get(context.DB + '/customers', {
+    const response = await axios.get('/customers', {
       headers: {
         Authorization:
-          'Bearer ' + resp.data.jwt,
+          'Bearer ' + token.data.jwt,
       },
+      
     });
     return response.data;
   } catch (err) {
@@ -31,6 +34,10 @@ exports.handler = async function (context, event, callback) {
 }
 
 exports.fetch = async (phoneNumber, context) => {
-  const customers = await retrieveCustomers(context.DB);
-  return customers.filter(e => e.channels[0].value == phoneNumber)[0];
+  console.debug('crm.fetch started');
+    const customers = await retrieveCustomers(context);
+    if (customers) {
+      return customers.filter(e => e.channels[0].value == phoneNumber)[0];
+    }
+  return null; 
 }
