@@ -58,18 +58,25 @@ exports.handler = async function (context, event, callback) {
         }
         console.log(`selectedWorker ${selectedWorker}`);
 
-        let name = event['Author'];
-        const participant = await crm.fetch(event['Author'], context);
-
-        if (participant.display_name) {
-          name = participant.display_name
-        }
 
         //adds worker to the conversation
         await twilio.conversations
           .conversations(event['ConversationSid'])
           .participants
           .create({ identity: selectedWorker })
+
+          let name = event['Author'];
+          let participant = null;
+        try {
+          participant = await crm.fetch(event['Author'], context);
+        } catch (err) {
+          // console.log(err);
+          callback(err);
+        }
+
+        if (participant.display_name) {
+          name = participant.display_name
+        }
 
         //updates conversation friendly name
         await twilio
