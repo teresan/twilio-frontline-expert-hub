@@ -7,9 +7,9 @@ exports.speakToBot = async (message, participant, context) => {
   } else if (message.toLowerCase().includes('agent')) {
     return {message: `Bear with us while we connect you to someone`, route: 'agent'}; 
   } else {
-    const crm = require(Runtime.getFunctions()['crm'].path);
-    const participantFromDb = await crm.fetch(participant, context);      
-    return {message: ` ${participantFromDb.display_name},\nIf you know the email of the person you want to speak, please write:\nEMAIL person@email.com\nOtherwise write:\nAGENT\nand we will connect you with an expert.`, route: 'no'} ;
+    // const crm = require(Runtime.getFunctions()['crm'].path);
+    // const participantFromDb = await crm.fetch(participant, context);      
+    return {message: `If you know the email of the agent you want to speak, please write:\nperson@email.com\nOtherwise write:\nAGENT\nand we will connect you with an expert.`, route: 'no'} ;
   }
 }
 async function getEmailFromMessage(message){
