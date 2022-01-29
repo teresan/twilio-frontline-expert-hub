@@ -14,17 +14,17 @@ const getCustomerProxyAddress = (channelName, channelAddress, context) => {
 
     const handleGetProxyAddress = (event, context) => {
         console.log('Getting Proxy Address');
-        console.log(event.Token);
+        // console.log(event.Token); //token parameter no longer available on callbacks V2
         console.log(event.Worker);
         console.log(event.CustomerId);
-        console.log(event.Channel.type);
-        console.log(event.Channel.value);
+        console.log(event.ChannelType);
+        console.log(event.ChannelValue);
 
     
          const workerIdentity = event.Worker.identity;
          const customerId = event.CustomerId;
-         const channelName = event.Channel.type;
-         const channelAddress = event.Channel.value;
+         const channelName = event.ChannelType;
+         const channelAddress = event.ChannelValue;
     
          const proxyAddress = getCustomerProxyAddress(channelName, channelAddress, context);
     
@@ -44,7 +44,7 @@ const getCustomerProxyAddress = (channelName, channelAddress, context) => {
     
 
 exports.handler = function(context, event, callback) {
-    const location = event.location;
+    const location = event.Location;
 
      // Location helps to determine which action to perform.
     switch (location) {

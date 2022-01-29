@@ -23,7 +23,7 @@ async function retrieveCustomers(context) {
 
 exports.handler = async function (context, event, callback) {
   let customers = await retrieveCustomers(context);
-  switch (event.location) {
+  switch (event.Location) {
     case 'GetCustomerDetailsByCustomerId':
       callback(null, { objects: { customer: customers[event.CustomerId - 1] } });
       break;
