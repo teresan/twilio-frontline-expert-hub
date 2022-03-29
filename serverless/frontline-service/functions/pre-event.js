@@ -31,7 +31,7 @@ exports.handler = async function (context, event, callback) {
           .conversations(event['ConversationSid'])
           .participants
           .create({ identity: selectedWorker });
-      } else {
+      } else if (reply.route == 'AGENT') {
         selectedWorker = await getLongestIdleAvailableWorker(context);
 
         await twilio.conversations
