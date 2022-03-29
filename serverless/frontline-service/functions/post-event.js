@@ -21,7 +21,7 @@ exports.handler = async function (context, event, callback) {
 
         //find customer in crm -- to add attributes to FrontLine application
         const crm = require(Runtime.getFunctions()['crm'].path);
-        const crmCustomer = await crm.fetch(customerNumber, context)
+        const crmCustomer = await crm.fetchByPhoneNumber(customerNumber, context)
             .catch(error => callback(error));
 
         if (!crmCustomer) callback(`No crm record for ${customerNumber}`);

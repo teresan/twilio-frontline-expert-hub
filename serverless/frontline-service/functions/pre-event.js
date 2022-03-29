@@ -1,24 +1,8 @@
 
 exports.handler = async function (context, event, callback) {
-  console.log(`${event['EventType']}`);
-
   const twilio = context.getTwilioClient();
-  const crm = require(Runtime.getFunctions()['crm'].path);
 
-  //updates participant's avatar on conversation add. update here to consider other channels
-  if (event['MessagingBinding.Address']) {
-    crm.fetch(event['MessagingBinding.Address'], context)
-      .then(participant => {
-        callback(null, {
-          friendly_name: participant.display_name,
-          attributes: JSON.stringify({ avatar: participant.avatar })
-        });
-      }).catch(e => callback(e));
-  }
-
-  //analyses participant's (end user) message and redirect to bot
   if (event['EventType'] === 'onMessageAdd' && event['Source'] != 'SDK') {
-    let message = event['Body'];
 
     let participants = await twilio
       .conversations
@@ -31,103 +15,50 @@ exports.handler = async function (context, event, callback) {
 
     } else {
       const bot = require(Runtime.getFunctions()['speakToBot'].path);
-      let reply = await bot.speakToBot(message, event['Author'], context);
+      let reply = await bot.speakToBot(event['Body']);
 
-      //sends bot's reply message
       await twilio
         .conversations
         .conversations(event['ConversationSid'])
         .messages
         .create({ author: 'system', body: reply.message });
 
-      //no route means bot still interacting with participant
       if (reply.route == 'no') {
         callback(null, 'No routing. Bot interacting with participant');
+      } else if (reply.route == 'email') {
+        selectedWorker = reply.route;
+        await twilio.conversations
+          .conversations(event['ConversationSid'])
+          .participants
+          .create({ identity: selectedWorker });
       } else {
+        selectedWorker = await getLongestIdleAvailableWorker(context);
 
-        //add worker participant, after end user selection
-        let selectedWorker = '';
-
-        if (reply.route == 'agent') {
-          selectedWorker = await getLastFrontLineUser(twilio, event['Author'], event['ConversationSid']);
-          if (!selectedWorker) {
-            selectedWorker = await getLongestIdleAvailableWorker(context);
-          }
-        } else {
-          selectedWorker = reply.route;
-        }
-        console.log(`selectedWorker ${selectedWorker}`);
-
-
-        //adds worker to the conversation
         await twilio.conversations
           .conversations(event['ConversationSid'])
           .participants
           .create({ identity: selectedWorker })
+      }
 
-          let name = event['Author'];
-          let participant = null;
-        try {
-          participant = await crm.fetch(event['Author'], context);
-        } catch (err) {
-          // console.log(err);
-          callback(err);
-        }
 
-        if (participant.display_name) {
-          name = participant.display_name
-        }
+      const crm = require(Runtime.getFunctions()['crm'].path);
+      let participant = await crm.fetchByPhoneNumber(event['Author'], context);
 
-        //updates conversation friendly name
+      if (participant.display_name) {
         await twilio
           .conversations
           .conversations(event['ConversationSid'])
           .update({
-            friendlyName: `${name}`
+            friendlyName: `${participant.display_name}`
           });
-
-        callback(null, event['ConversationSid']);
       }
+
+      callback(null, event['ConversationSid']);
     }
   } else {
     callback(null, 'All good. Let the conversation flow');
   }
 }
-
-let getLastFrontLineUser = async (twilio, user, thisConversation) => {
-
-  //fetch participant conversations
-  let previousConversations = await twilio.conversations.participantConversations
-    .list({ address: user });
-
-  if (!previousConversations) return;
-
-  //find last conversation
-  let lastCreatedDate = new Date(-8640000000000000);  // min Date
-  let lastConversationSid;
-  previousConversations.forEach(p => {
-    if (p.conversationSid !== thisConversation && lastCreatedDate < p.conversationDateCreated) {
-      lastCreatedDate = p.conversationDateCreated;
-      lastConversationSid = p.conversationSid;
-    }
-  });
-
-  console.log(lastConversationSid);
-
-  //fetch frontline user from last conversation
-  let participants = await twilio.conversations.conversations(lastConversationSid).participants
-    .list();
-
-  let lastFrontLineUser;
-  participants.some(p => {
-    lastFrontLineUser = p.identity;
-    return (p.identity);
-  });
-
-  console.log(`lastFrontlineUser:${lastFrontLineUser}`);
-  return lastFrontLineUser;
-}
-
 let getLongestIdleAvailableWorker = async (context) => {
   const availableWorkers = await context.getTwilioClient().taskrouter.workspaces(context.FRONTLINE_WORKSPACE)
     .workers
@@ -148,5 +79,5 @@ let getLongestIdleAvailableWorker = async (context) => {
     .workers(longestIdle.sid)
     .update({ attributes: JSON.stringify(attr) });
   console.log(`${updatedWorker.friendlyName} updated attributes: ${updatedWorker.attributes}`)
-  return updatedWorker;
+  return updatedWorker.friendlyName;
 }

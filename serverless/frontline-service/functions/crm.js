@@ -1,4 +1,4 @@
-async function retrieveCustomers(context) {
+async function fetchAll(context) {
 
   const axios = require("axios").create({
     baseURL: context.DB_URL
@@ -22,7 +22,7 @@ async function retrieveCustomers(context) {
 }
 
 exports.handler = async function (context, event, callback) {
-  let customers = await retrieveCustomers(context);
+  let customers = await fetchAll(context);
   switch (event.Location) {
     case 'GetCustomerDetailsByCustomerId':
       callback(null, { objects: { customer: customers[event.CustomerId - 1] } });
@@ -33,9 +33,9 @@ exports.handler = async function (context, event, callback) {
   }
 }
 
-exports.fetch = async (phoneNumber, context) => {
+exports.fetchByPhoneNumber = async (phoneNumber, context) => {
   console.debug('crm.fetch started');
-    const customers = await retrieveCustomers(context);
+    const customers = await fetchAll(context);
     if (customers) {
       return customers.filter(e => e.channels[0].value == phoneNumber)[0];
     }
