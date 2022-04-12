@@ -4,18 +4,17 @@ async function fetchAll(context) {
     baseURL: context.DB_URL
   });
   try {
-    const token = await axios.post('/auth/local', {
-      identifier: context.DB_ID,
-      password: context.DB_PASS, 
-    });
+  
     const response = await axios.get('/customers', {
       headers: {
         Authorization:
-          'Bearer ' + token.data.jwt,
+          'Bearer ' + context.DB_API_TOKEN,
       },
       
     });
-    return response.data;
+    let crm_results = [];
+    response.data.map = (customer => crm_results.push(customer.attributes));
+    return crm_results;
   } catch (err) {
     console.log('"retrieveCustomers: "+ retrieveCustomers failed', err);
   }
