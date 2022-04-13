@@ -1,7 +1,7 @@
 exports.speakToBot = async (message) => {
 
-  let language = await getLanguage();
-  let outcome = await getCopy('connection', language);
+  let language = await getLanguage(context);
+  let outcome = await getCopy('connection', language, context);
 
   console.log(outcome);
   //sample bot interaction. implement your bot logic here
@@ -21,7 +21,7 @@ async function getEmailFromMessage(message){
   return found;
 }
 
-async function getLanguage(){
+async function getLanguage(context){
   const axios = require("axios").create({
     baseURL: context.DB_URL
   });
@@ -43,7 +43,7 @@ async function getLanguage(){
   }
 }
 
-async function getCopy(entryID, language){
+async function getCopy(entryID, language,context){
   const axios = require("axios").create({
     baseURL: context.DB_URL
   });
