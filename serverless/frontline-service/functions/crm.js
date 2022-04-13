@@ -5,7 +5,7 @@ async function fetchAll(context) {
   });
   try {
   
-    const response = await axios.get('/customers', {
+    const response = await axios.get('/customers?populate=*&sort[0]=customer_id', {
       headers: {
         Authorization:
           'Bearer ' + context.DB_API_TOKEN,
@@ -13,7 +13,7 @@ async function fetchAll(context) {
       
     });
     let crm_results = [];
-    response.data.map = (customer => crm_results.push(customer.attributes));
+    response.data.data.map(customer => crm_results.push(customer.attributes));
     return crm_results;
   } catch (err) {
     console.log('"retrieveCustomers: "+ retrieveCustomers failed', err);
