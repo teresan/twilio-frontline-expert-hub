@@ -15,7 +15,7 @@ exports.handler = async function (context, event, callback) {
 
     } else {
       const bot = require(Runtime.getFunctions()['speakToBot'].path);
-      let reply = await bot.speakToBot(event['Body']);
+      let reply = await bot.speakToBot(event['Body'], context);
 
       await twilio
         .conversations

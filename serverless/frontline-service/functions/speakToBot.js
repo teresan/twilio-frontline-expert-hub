@@ -1,4 +1,4 @@
-exports.speakToBot = async (message) => {
+exports.speakToBot = async (message, context) => {
 
   let language = await getLanguage(context);
   let outcome = await getCopy('connection', language, context);
