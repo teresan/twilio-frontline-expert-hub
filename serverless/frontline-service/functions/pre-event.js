@@ -1,7 +1,7 @@
 
 exports.handler = async function (context, event, callback) {
   const twilio = context.getTwilioClient();
-
+  console.log("Pre-event");
   if (event['EventType'] === 'onMessageAdd' && event['Source'] != 'SDK') {
 
     let participants = await twilio
