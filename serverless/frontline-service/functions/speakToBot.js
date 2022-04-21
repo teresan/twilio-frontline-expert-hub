@@ -44,22 +44,26 @@ async function getLanguage(context){
   }
 }
 
-async function getCopy(entryID, language, context){
+async function getCopy(entryId, language, context){
   const axios = require("axios").create({
     baseURL: context.DB_URL
   });
   try {
   
-    const response = await axios.get(`/localisations?filters[entry_id][$eq]=${entryID}&filters[localisation][language][&eq]=${language}`, {
+    const response = await axios.get(`/localisations?populate=*&filters[locale_lang][$eq]=${language}`, {
+      
       headers: {
         Authorization:
           'Bearer ' + context.DB_API_TOKEN,
       },
       
     });
-    let result = response.data.data[0]; //only one
-    console.log(response.data.data[0]);
-    return result;
+    let result = response.data.data[0][attributes].entry_locales; //only one
+    console.log(response.data.data[0][attributes].entry_locales.length);
+    for (var i=0; i<result.length; i++)
+      if(result[i].entry_id === entryId) 
+         return result[i].copy;
+
   } catch (err) {
     console.log('"retrieveCustomers: "+ retrieveCustomers failed', err);
     return '';

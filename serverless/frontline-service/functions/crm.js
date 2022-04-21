@@ -17,7 +17,7 @@ async function fetchAll(context) {
     return crm_results;
   } catch (err) {
     console.log('"retrieveCustomers: "+ retrieveCustomers failed', err);
-  }
+  } 
 }
 
 exports.handler = async function (context, event, callback) {
