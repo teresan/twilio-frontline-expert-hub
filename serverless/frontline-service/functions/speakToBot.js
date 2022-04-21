@@ -22,7 +22,7 @@ async function getEmailFromMessage(message){
   return found;
 }
 
-async function getLanguage(context){
+exports.getLanguage =  async (context) => {
   const axios = require("axios").create({
     baseURL: context.DB_URL
   });
@@ -51,7 +51,8 @@ async function getLanguage(context){
   }
 }
 
-async function getCopy(entryId, language, context){
+exports.getCopy =  async (entryId, language, context) => {
+
   const axios = require("axios").create({
     baseURL: context.DB_URL
   });
