@@ -1,10 +1,6 @@
 exports.speakToBot = async (message, context) => {
 
-  let language = await getLanguage(context);
-  let outcome = await getCopy('connection', language, context);
-
-  console.log("speakToBot");
-  console.log(outcome);
+  
   //sample bot interaction. implement your bot logic here
   if (message.includes('@')) {
     let email = await getEmailFromMessage(message);
