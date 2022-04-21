@@ -35,7 +35,8 @@ async function getLanguage(context){
       
     });
     let result = response.data.data[0].language; //only one
-    
+    console.log(result);
+
     return result;
   } catch (err) {
     console.log('"retrieveCustomers: "+ retrieveCustomers failed', err);
@@ -43,7 +44,7 @@ async function getLanguage(context){
   }
 }
 
-async function getCopy(entryID, language,context){
+async function getCopy(entryID, language, context){
   const axios = require("axios").create({
     baseURL: context.DB_URL
   });
@@ -57,7 +58,7 @@ async function getCopy(entryID, language,context){
       
     });
     let result = response.data.data[0]; //only one
-    
+    console.log(response.data.data[0]);
     return result;
   } catch (err) {
     console.log('"retrieveCustomers: "+ retrieveCustomers failed', err);
