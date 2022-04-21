@@ -30,7 +30,7 @@ getLanguage =  async (context) => {
 
 exports.getCopy =  async (entryId, context) => {
 
-  const language = await getLanguage(context)
+  const language = await getLanguage(context);
   const axios = require("axios").create({
     baseURL: context.DB_URL
   });
