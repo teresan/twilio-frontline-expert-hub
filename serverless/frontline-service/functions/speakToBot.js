@@ -59,8 +59,8 @@ async function getCopy(entryId, language, context){
       },
       
     });
-    console.log("response.data.data[0]");
-    console.log(response.data.data[0]);
+    console.log("response.data");
+    console.log(response.data);
 
     // let result = response.data.data[0][attributes].entry_locales; //only one
     // for (var i=0; i<result.length; i++)
