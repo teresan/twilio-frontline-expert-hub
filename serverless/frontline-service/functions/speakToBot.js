@@ -35,8 +35,8 @@ async function getLanguage(context){
       },
       
     });
-    let result = response.data.data[0].language; //only one
-    console.log(response.data);
+    let result = response.data.data[0]; //only one
+    console.log(response.data.data[0][attributes].language);
 
     return result;
   } catch (err) {
