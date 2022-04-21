@@ -36,7 +36,7 @@ async function getLanguage(context){
       
     });
     let result = response.data.data[0].language; //only one
-    console.log(result);
+    console.log(response.data);
 
     return result;
   } catch (err) {
