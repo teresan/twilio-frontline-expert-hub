@@ -1,8 +1,7 @@
 exports.handler = async function (context, event, callback) {
-  const bot = require(Runtime.getFunctions()['speakToBot'].path);
+  const copy = require(Runtime.getFunctions()['getCopy'].path);
 
-  let language = await bot.getLanguage(context);
-  let intro = await bot.getCopy('intro', language, context);
+  let intro = await copy.getCopy('intro', context);
 
   //no routing here, only bot welcome
   await context.getTwilioClient()
