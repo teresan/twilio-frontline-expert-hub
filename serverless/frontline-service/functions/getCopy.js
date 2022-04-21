@@ -11,16 +11,17 @@ getLanguage =  async (context) => {
       },
       
     });
+    let result = "en";
     try {
-      let result = response.data.data[0]["attributes"].language; //only one
+      result = response.data.data[0]["attributes"].language; //only one
       console.log(response.data.data[0]["attributes"].language);
 
     }
     catch{
-      let result = "en"; //english if it fails
+      return result; //english if it fails
     }
 
-    return result;
+   
   } catch (err) {
     console.log('"getLanguage: "+ getLanguage failed', err);
     return 'en';
