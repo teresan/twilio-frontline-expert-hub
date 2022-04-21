@@ -59,14 +59,16 @@ async function getCopy(entryId, language, context){
       },
       
     });
-    let result = response.data.data[0][attributes].entry_locales; //only one
-    console.log(response.data.data[0][attributes].entry_locales.length);
-    for (var i=0; i<result.length; i++)
-      if(result[i].entry_id === entryId) 
-         return result[i].copy;
+    console.log("response.data.data[0]");
+    console.log(response.data.data[0]);
+
+    // let result = response.data.data[0][attributes].entry_locales; //only one
+    // for (var i=0; i<result.length; i++)
+    //   if(result[i].entry_id === entryId) 
+    //      return result[i].copy;
 
   } catch (err) {
-    console.log('"retrieveCustomers: "+ retrieveCustomers failed', err);
+    console.log('"getCopy: "+ getCopy failed', err);
     return '';
   }
 }
