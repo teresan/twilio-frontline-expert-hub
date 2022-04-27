@@ -25,7 +25,7 @@ exports.handler = async function (context, event, callback) {
 
       if (reply.route == 'no') {
         callback(null, 'No routing. Bot interacting with participant');
-      } else if (reply.route == 'email') {
+      } else if (reply.route.includes('@')) {
         selectedWorker = reply.route;
         await twilio.conversations
           .conversations(event['ConversationSid'])
