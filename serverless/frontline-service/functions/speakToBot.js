@@ -8,7 +8,7 @@ exports.speakToBot = async (message, context) => {
   //sample bot interaction. implement your bot logic here
   if (message.includes('@')) {
     let email = await getEmailFromMessage(message);
-    return {message: `${connect_email} ${email}`, route: email} ;
+    return {message: `${connect_email} ${email}`, route: email.toLowerCase()} ;
   } else if (message.toLowerCase().includes('agent')) {
     return {message: connect_someone, route: 'agent'}; 
   } else {
