@@ -76,6 +76,8 @@ web_modules/
 .envProd
 .envStage
 .envDev
+.env ExpertHub 1
+.env ExpertHub 2
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
