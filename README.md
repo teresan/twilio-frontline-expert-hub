@@ -4,3 +4,5 @@ This repository contains serverless services implemented with [Twilio Functions]
 
 Learn how to implement this application on this [blog post](#).
 
+This version of frontline-expert-hub is using access to STRAPI VERSION
+v4.1.7
